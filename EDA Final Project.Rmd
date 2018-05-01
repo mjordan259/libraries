@@ -1,24 +1,15 @@
 ---
-output: html_document
-editor_options: 
+editor_options:
   chunk_output_type: console
+output:
+  pdf_document: default
+  html_document: default
 ---
 # Libraries: What Drives Visits And What Visitors Do by Marie Jordan
 
 ========================================================
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
-# Load all of the packages that you end up using in your analysis in this code
-# chunk.
-
-# Notice that the parameter "echo" was set to FALSE for this code chunk. This
-# prevents the code from displaying in the knitted HTML output. You should set
-# echo=FALSE for all code chunks in your file, unless it makes sense for your
-# report to show the code that generated a particular plot.
-
-# The other parameters for "message" and "warning" should also be set to FALSE
-# for other code chunks once you have verified that each plot comes out as you
-# want it to. This will clean up the flow of your report.
 
 library(ggplot2)
 library(plyr)
@@ -64,16 +55,20 @@ options(scipen=999)
 ```{r Histograms of visit data, echo=FALSE, message=FALSE, warning=FALSE}
 
 a1 <- ggplot(aes(x=POPU_ST), data=physical) + 
-  geom_histogram() 
+  geom_histogram() +
+  labs(x='State Population', y='Count')
 
 a2 <- ggplot(aes(x=VISITS), data=physical) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='Number of Visits', y='Count')
 
 a3 <- ggplot(aes(x=TOTPRO), data=physical) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='Number of Programs', y='Count')
 
 a4 <- ggplot(aes(x=HRS_OPEN), data=physical) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='Number of Hours Open', y='Count')
 
 grid.arrange(a1, a2, a3, a4, ncol=1)
 ```
@@ -93,10 +88,12 @@ Summary table for visit-related variables.
 
 b1 <- ggplot(aes(x=POPU_ST), 
   data=subset(physical, physical$POPU_ST < quantile(physical$POPU_ST, 0.95) &   physical$POPU_ST > quantile(physical$POPU_ST, .05))) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='State Population', y='Count')
 
 c1 <- ggplot(aes(x=POPU_ST), data=subset(physical, physical$POPU_ST < quantile(physical$POPU_ST, 0.90) & physical$POPU_ST > quantile(physical$POPU_ST, .1))) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='State Population', y='Count')
 
 grid.arrange(a1, b1, c1, ncol=1)
 ```
@@ -116,22 +113,28 @@ select = c('STABR', 'POPU_ST', 'TOTCIR', 'KIDCIRCL', 'ELMATCIR', 'REFERENC',
 #do once they're in the library.
 
 d1 <- ggplot(aes(x=TOTCIR), data=action) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='Total Circulation', y='Count')
 
 d2 <- ggplot(aes(x=KIDCIRCL), data=action) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='Children\'s Circulation', y='Count')
 
 d3 <- ggplot(aes(x=ELMATCIR), data=action) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='Electronic Circulation', y='Count')
 
 d4 <- ggplot(aes(x=REFERENC), data=action) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='Reference Circulation', y='Count')
 
 d5 <- ggplot(aes(x=LOANTO), data=action) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='Books Loaned Out', y='Count')
 
 d6 <- ggplot(aes(x=LOANFM), data=action) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='Books Loaned In', y='Count')
 
 grid.arrange(d1, d2, d3, d4, d5, d6, ncol=1)
 
@@ -160,7 +163,8 @@ Summary of the table of actions patrons took at the library.
 
 e1 <- ggplot(aes(x=TOTCIR), data=subset(action, action$TOTCIR < quantile(action$TOTCIR, 0.90) & 
 action$TOTCIR > quantile(action$TOTCIR, .1))) + 
-  geom_histogram()
+  geom_histogram() +
+  labs(x='Total Circulation', y='Count')
 
 grid.arrange(d1, e1, ncol=1)
 
@@ -231,19 +235,29 @@ particular interest.
 
 ```{r Correlation Plots, echo=FALSE, message=FALSE, warning=FALSE}
 ggcorr(physical, nbreaks=5)
+
+```
+
+```{r Correlation Plots 2, echo=FALSE, message=FALSE, warning=FALSE}
 ggcorr(action, nbreaks = 5)
 ```
+
 
 Correlation plots show potential correlations between all variables 
 examined.
 
 ```{r Plots of populations against visits and programs, echo=FALSE, message=FALSE, warning=FALSE}
+
 ggplot(aes(x=POPU_ST, y= VISITS), data=physical) +
-  geom_point()
+  geom_point() +
+  labs(x="State Population", y="No. of Visits")
 
+```
+
+```{r Plots of populations against visits and programs 2, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(aes(x=POPU_ST, y=TOTPRO), data=physical) +
-  geom_point()
-
+  geom_point() +
+  labs(x="State Population", y="No. of Programs")
 ```
 
 These plots show the relationship between state populations and the number of 
@@ -252,12 +266,20 @@ visits and number of programs in the submitted timeframe.
 ```{r Number of Programs vs Number of Visits, echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(aes(x=TOTPRO, y = VISITS), data=physical) +
-  geom_point()
+  geom_point() +
+  labs(x="No. of Visits", y="No. of Programs")
 
-ggplot(aes(x=log10(TOTPRO), y = log10(VISITS)), data=physical) +
-  geom_point()
 
 ```
+
+```{r Number of Programs vs Number of Visits 2, echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(aes(x=log10(TOTPRO), y = log10(VISITS)), data=physical) +
+  geom_point() +
+  labs(x="No. of Visits", y="No. of Programs")
+
+```
+
 
 These plots examine the relationship between the number of programs and the
 number of visits in a state. I did a version with the log10 of both variables,
@@ -267,7 +289,9 @@ would have on the data.
 
 ```{r Number of Hours Open vs Number of Visits, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(aes(x=HRS_OPEN, y = VISITS), data=physical) +
-  geom_point()
+  geom_point() +
+  labs(x="No. of Hours Open", y="No. of Visits")
+
 ```
 
 As above, this plot examines the relationship between hours open and number of
@@ -289,7 +313,9 @@ number of programs and hours open and number of visits.
 
 ```{r total predicts kid circ, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(aes(x=TOTCIR, y=KIDCIRCL), data = action) +
-  geom_point(size=5)
+  geom_point(size=5) +
+  labs(x="Total Circulation", y="Children\'s Circulation")
+
 ```
 
 This plot compares how total circulation numbers predict kid circulation 
@@ -298,7 +324,9 @@ circulation going up as total circulation does.
 
 ```{r total predicts electronic circ, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(aes(x=TOTCIR, y=ELMATCIR), data = action) +
-  geom_point(size=5)
+  geom_point(size=5) +
+  labs(x="Total Circulation", y="Electronic Circulation")
+
 ```
 
 Similar to the plot above, this one looks at how total circulation relates to
@@ -360,7 +388,9 @@ Most of the relationships I studied were quite strong, but the number of hours
 ```{r Visits vs Hours Open by Number of Programs, echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(aes(y=VISITS, x=HRS_OPEN), data=physical) +
-  geom_point(aes(color=TOTPRO),size= 5)
+  geom_point(aes(color=TOTPRO),size= 5) +
+  labs(x="No. of Visits", y="No. of Hours Open")
+
 
 ```
 
@@ -378,7 +408,9 @@ Linear regression analysis for programs and hours open predicting visits.
 
 ```{r loanto and loanfm, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(aes(x=LOANTO, y=LOANFM), data=action) +
-  geom_point(aes(color=POPU_ST), size=5)
+  geom_point(aes(color=POPU_ST), size=5) +
+  labs(x="Loans Out", y="Loans In")
+
 ```
 
 Comparing loan to and loan from, colored by population. The loans numbers are
@@ -395,7 +427,8 @@ tidy.action <- gather(action, "type", "n", 'POPU_ST':'LOANFM')
 ggplot(aes(x=type, y=n), data=tidy.action) +
   geom_bar(stat='identity', aes(fill=type)) +
   facet_wrap(~tidy.action$STABR) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Variable", y="Total Number")
 ```
 
 A series of barplots, broken down by state, to compare all variables in the 
@@ -410,7 +443,9 @@ action.notot <- gather(action.notot, 'type', 'n', 'ELMATCIR':'REFERENC')
 ggplot(aes(x=type, y=n), data=action.notot) +
   geom_bar(stat='identity', aes(fill=type)) +
   facet_wrap(~action.notot$STABR) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Variable", y="Total Number")
+
 
 ```
 
@@ -426,7 +461,9 @@ action.cir <- gather(action.cir, 'type', 'n', 'TOTCIR':'ELMATCIR')
 ggplot(aes(x=type, y=n), data=action.cir) +
   geom_bar(stat='identity', aes(fill=type)) +
   facet_wrap(~action.cir$STABR) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x="Circulation Types", y="Total Number")
+
 
 ```
 
@@ -437,7 +474,9 @@ electronic materials.
 
 ```{r pop on circ, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(aes(x=POPU_ST, y=TOTCIR), data=action) +
-  geom_point(aes(color=physical$VISITS), size=5) 
+  geom_point(aes(color=physical$VISITS), size=5) +
+  labs(x="State Population", y="Total Circulation")
+
 ```
 
 This scatterplot shows the effects of population size on total circulation 
@@ -446,7 +485,9 @@ population and second-highest circulation number is Ohio.
 
 ```{r pop on visits, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(aes(x=POPU_ST,y=VISITS), data=physical) +
-  geom_point(aes(color=action$TOTCIR), size=5)
+  geom_point(aes(color=action$TOTCIR), size=5) +
+  labs(x="State Population", y="No. of Visits")
+
 ```
 
 Effects of population size on number of visits, colored by total circulation
@@ -454,7 +495,9 @@ numbers. As population size increases, so do number of visits.
 
 ```{r visits on circ, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(aes(x=VISITS, y=action$TOTCIR), data=physical) +
-  geom_point(aes(color=POPU_ST), size=5)
+  geom_point(aes(color=POPU_ST), size=5) +
+  labs(x="No. of Visits", y="Total Circulation")
+
 ```
 
 This plot shows the relationship between number of visits and total circulation
